@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>{{ task.title }}</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'todo_app/kanban.css' %}">
+</head>
+<body>
+    <h1>{{ task.title }}</h1>
+    <p>{{ task.description }}</p>
+    <p>Priority: {{ task.get_priority_display }}</p>
+    <p>Category: {{ task.category }}</p>
+    <p>{{ task.get_status_display }}</p>
+    <a href="{% url 'task_edit' task.pk %}"  class="button">Edit</a>
+    <a href="{% url 'task_delete' task.pk %}"  class="button">Delete</a>
+    <a href="{% url 'task_list' %}"  class="button">Back to list</a>
+    <a href="{% url 'kanban_board' %}" class="button">Back to Kanban</a>
+</body>
+</html>

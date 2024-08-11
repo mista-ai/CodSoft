@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kanban Board</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'todo_app/kanban.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+</head>
+<body>
+    <h1>Kanban Board</h1>
+    <a href="{% url 'task_list' %}">Back to To-Do List</a>
+
+    <!-- Button to add a new task -->
+    <div style="margin-top: 20px;">
+        <a href="{% url 'task_new' %}" class="button">Add New Task</a>
+    </div>
+
+    <div class="kanban-container" style="margin-top: 20px;">
+        <!-- Existing Kanban Columns -->
+        <!-- Pending Column -->
+        <div class="kanban-column" id="pending">
+            <h2>Pending</h2>
+            <div class="kanban-tasks">
+                {% for task in tasks_pending %}
+                    <div class="kanban-task" data-task-id="{{ task.id }}">
+                        <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- In Progress Column -->
+        <div class="kanban-column" id="in-progress">
+            <h2>In Progress</h2>
+            <div class="kanban-tasks">
+                {% for task in tasks_in_progress %}
+                    <div class="kanban-task" data-task-id="{{ task.id }}">
+                        <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- Completed Column -->
+        <div class="kanban-column" id="completed">
+            <h2>Completed</h2>
+            <div class="kanban-tasks">
+                {% for task in tasks_completed %}
+                    <div class="kanban-task" data-task-id="{{ task.id }}">
+                        <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- On Hold Column -->
+        <div class="kanban-column" id="on-hold">
+            <h2>On Hold</h2>
+            <div class="kanban-tasks">
+                {% for task in tasks_on_hold %}
+                    <div class="kanban-task" data-task-id="{{ task.id }}">
+                        <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!-- Canceled Column -->
+        <div class="kanban-column" id="canceled">
+            <h2>Canceled</h2>
+            <div class="kanban-tasks">
+                {% for task in tasks_canceled %}
+                    <div class="kanban-task" data-task-id="{{ task.id }}">
+                        <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(function() {
+            $(".kanban-tasks").sortable({
+                connectWith: ".kanban-tasks",
+                placeholder: "kanban-placeholder",
+                stop: function(event, ui) {
+                    var taskId = ui.item.data("task-id");
+                    var newStatus = ui.item.closest(".kanban-column").attr("id");
+
+                    $.ajax({
+                        url: "{% url 'update_task_status' %}",
+                        method: "POST",
+                        data: {
+                            task_id: taskId,
+                            status: newStatus,
+                            csrfmiddlewaretoken: '{{ csrf_token }}'
+                        },
+                        success: function(response) {
+                            console.log("Task updated successfully");
+                        }
+                    });
+                }
+            }).disableSelection();
+        });
+    </script>
+</body>
+</html>

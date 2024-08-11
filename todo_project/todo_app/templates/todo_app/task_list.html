@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do List</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'todo_app/kanban.css' %}">
+</head>
+<body>
+    <h1>To-Do List</h1>
+    <ul>
+        {% for task in tasks %}
+            <li>
+                <a href="{% url 'task_detail' task.pk %}">{{ task.title }}</a>
+                - Priority: {{ task.get_priority_display }}
+                {% if task.completed %}(Completed){% endif %}
+            </li>
+        {% endfor %}
+    </ul>
+    <a href="{% url 'task_new' %}"  class="button">Add new task</a>
+    <br><br>
+    <a href="{% url 'kanban_board' %}"  class="button">View Kanban Board</a>
+</body>
+</html>
