@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rock Paper Scissors</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .choice-buttons {
+            margin: 20px;
+        }
+        .choice-buttons button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+        }
+        .instructions {
+            margin: 20px 0;
+            font-size: 18px;
+        }
+        .scoreboard {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Rock Paper Scissors Game</h1>
+
+    <div class="instructions">
+        <p>Instructions:</p>
+        <ul>
+            <li>Choose between Rock, Paper, or Scissors by clicking one of the buttons below.</li>
+            <li>Rock beats Scissors, Scissors beat Paper, and Paper beats Rock.</li>
+            <li>In case of a tie, both you and the computer receive 0.5 points.</li>
+            <li>After each round, decide if you want to continue or reset the scores.</li>
+        </ul>
+    </div>
+
+    <div class="scoreboard">
+        <h3>Round: {{ round_counter }}</h3>
+        <h3>User Score: {{ user_score }} | Computer Score: {{ computer_score }}</h3>
+    </div>
+
+    {% if result %}
+    <p>You chose <strong>{{ user_choice }}</strong>. The computer chose <strong>{{ computer_choice }}</strong>.</p>
+    <h2>{{ result }}</h2>
+
+    <form method="POST">
+        <p>Want to continue?</p>
+        <button type="submit" name="continue" value="yes">Yes</button>
+        <a href="{{ url_for('reset_scores') }}">No, Reset Scores</a>
+    </form>
+
+    {% else %}
+    <form method="POST">
+        <div class="choice-buttons">
+            <button type="submit" name="choice" value="rock">Rock</button>
+            <button type="submit" name="choice" value="paper">Paper</button>
+            <button type="submit" name="choice" value="scissors">Scissors</button>
+        </div>
+    </form>
+    {% endif %}
+
+</body>
+</html>
